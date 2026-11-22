@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Sales Intelligence – Ihr Vertrieb in 2 Minuten | Better Decisions Faster</title>
+  <meta name="description" content="Kurzer Rundgang durch das Sales-Intelligence-Dashboard: tagesaktuelle Vertriebszahlen, Kundenbewegungen und Verkaufschancen."/>
+  <meta name="robots" content="noindex, nofollow"/>
+  <meta name="theme-color" content="#0969da"/>
+  <link rel="icon" href="assets/favicon.png"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=Instrument+Sans:wght@500;600;700&display=swap" rel="stylesheet"/>
+  <style>
+    :root{
+      --bg:#f0f4f8; --elev:#fff; --text:#0d1117; --muted:#57606a; --line:#d0d7de;
+      --brand:#0a0e14; --accent:#0969da; --accent-hover:#218bff; --accent-soft:#ddf4ff; --success:#1a7f37;
+      --radius:16px; --radius-lg:24px;
+      --shadow:0 4px 12px -2px rgba(13,17,23,.06),0 8px 24px -4px rgba(13,17,23,.08);
+      --shadow-lg:0 16px 48px -12px rgba(13,17,23,.18),0 8px 24px -8px rgba(13,17,23,.08);
+      --font-display:'Instrument Sans',system-ui,sans-serif; --font-body:'DM Sans',system-ui,sans-serif;
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth}
+    body{font-family:var(--font-body);background:var(--bg);color:var(--text);line-height:1.55;-webkit-font-smoothing:antialiased}
+    a{color:inherit}
+    .wrap{max-width:1100px;margin:0 auto;padding:0 24px}
+    header{background:linear-gradient(180deg,#14336a 0%,#0a1222 100%);color:#fff;padding:28px 0 150px}
+    .top{display:flex;align-items:center;justify-content:space-between;gap:16px}
+    .logo{background:#fff;border-radius:12px;padding:8px 14px;display:inline-flex}
+    .logo img{height:40px;width:auto;display:block}
+    .pill{font-size:.8rem;font-weight:600;letter-spacing:.16em;text-transform:uppercase;border:1.5px solid var(--accent-hover);border-radius:999px;padding:8px 18px;display:inline-flex;align-items:center;gap:10px}
+    .pill i{width:9px;height:9px;border-radius:50%;background:#60d096;animation:pulse 2s infinite}
+    @keyframes pulse{50%{opacity:.35}}
+    .intro{text-align:center;padding-top:56px}
+    .eyebrow{color:var(--accent-hover);font-weight:600;letter-spacing:.22em;font-size:.85rem;text-transform:uppercase}
+    h1{font-family:var(--font-display);font-weight:700;font-size:clamp(2rem,5vw,3.4rem);line-height:1.1;margin-top:14px}
+    .intro p{color:#c4d6ec;font-size:1.15rem;margin-top:16px}
+    main.wrap{margin-top:-110px;padding-bottom:72px}
+    .player{background:#000;border-radius:var(--radius-lg);overflow:hidden;box-shadow:var(--shadow-lg);aspect-ratio:16/9}
+    .player video{width:100%;height:100%;display:block;background:#000}
+    .hint{text-align:center;color:var(--muted);font-size:.95rem;margin-top:14px}
+    .hint a{color:var(--accent);font-weight:600;text-decoration:none;border-bottom:1.5px solid currentColor}
+    /* ---- question ---- */
+    #ask{margin-top:64px;background:var(--elev);border-radius:var(--radius-lg);box-shadow:var(--shadow);padding:clamp(28px,5vw,56px);scroll-margin-top:24px;position:relative;overflow:hidden}
+    #ask.glow{animation:glow 1.6s ease-out 1}
+    @keyframes glow{0%{box-shadow:0 0 0 0 rgba(9,105,218,.45),var(--shadow)}100%{box-shadow:0 0 0 28px rgba(9,105,218,0),var(--shadow)}}
+    .kicker{color:var(--accent);font-weight:700;letter-spacing:.2em;font-size:.8rem;text-transform:uppercase}
+    #ask h2{font-family:var(--font-display);font-size:clamp(1.5rem,3.2vw,2.2rem);line-height:1.2;margin:10px 0 8px}
+    #ask .sub{color:var(--muted);margin-bottom:28px}
+    .opts{display:grid;gap:14px;grid-template-columns:1fr 1fr}
+    .opt{display:flex;align-items:center;gap:16px;text-align:left;font:inherit;font-weight:600;font-size:1.05rem;color:var(--text);background:var(--bg);border:2px solid transparent;border-radius:var(--radius);padding:18px 20px;cursor:pointer;transition:transform .2s,border-color .2s,background .2s,box-shadow .2s}
+    .opt:hover,.opt:focus-visible{border-color:var(--accent);background:#fff;box-shadow:0 8px 24px -8px rgba(9,105,218,.35);transform:translateY(-2px);outline:none}
+    .opt b{flex:none;width:42px;height:42px;border-radius:50%;background:var(--accent);color:#fff;display:grid;place-items:center;font-family:var(--font-display);font-size:1.15rem}
+    .opt.sel{border-color:var(--accent);background:var(--accent-soft)}
+    .opts.done .opt:not(.sel){opacity:.45;pointer-events:none}
+    /* ---- thank you ---- */
+    #thanks{display:none;text-align:center;padding:12px 0 4px}
+    #thanks.show{display:block;animation:rise .6s cubic-bezier(.16,1,.3,1)}
+    @keyframes rise{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+    .check{width:84px;height:84px;margin:0 auto 18px}
+    .check circle{fill:none;stroke:var(--success);stroke-width:5;stroke-dasharray:240;stroke-dashoffset:240;animation:draw .7s .1s ease-out forwards}
+    .check path{fill:none;stroke:var(--success);stroke-width:6;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:60;stroke-dashoffset:60;animation:draw .5s .7s ease-out forwards}
+    @keyframes draw{to{stroke-dashoffset:0}}
+    #thanks h3{font-family:var(--font-display);font-size:clamp(1.5rem,3vw,2rem)}
+    #thanks p{color:var(--muted);max-width:620px;margin:10px auto 0}
+    #thanks .chosen{display:inline-block;margin-top:14px;background:var(--accent-soft);color:#0550ae;font-weight:700;border-radius:999px;padding:8px 18px}
+    .actions{display:flex;flex-wrap:wrap;gap:14px;justify-content:center;margin-top:28px}
+    .btn{display:inline-flex;align-items:center;justify-content:center;font:inherit;font-weight:700;border-radius:999px;padding:15px 28px;text-decoration:none;cursor:pointer;border:2px solid var(--accent);transition:transform .2s,background .2s}
+    .btn.primary{background:var(--accent);color:#fff}
+    .btn.primary:hover{background:var(--accent-hover);transform:translateY(-2px)}
+    .btn.ghost{background:#fff;color:var(--accent)}
+    .btn.ghost:hover{background:var(--accent-soft)}
+    .privacy{margin-top:22px;color:var(--muted);font-size:.85rem}
+    .confetti{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+    .confetti span{position:absolute;top:-14px;width:10px;height:16px;border-radius:2px;opacity:0;animation:fall 1.9s ease-out forwards}
+    @keyframes fall{0%{opacity:1;transform:translateY(0) rotate(0)}100%{opacity:0;transform:translateY(520px) rotate(540deg)}}
+    footer{padding:0 0 40px;text-align:center;color:var(--muted);font-size:.9rem}
+    footer a{margin:0 10px}
+    @media (max-width:760px){.opts{grid-template-columns:1fr}.pill{display:none}header{padding-bottom:130px}}
+    @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}html{scroll-behavior:auto}#thanks .check circle,#thanks .check path{stroke-dashoffset:0}}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap">
+      <div class="top">
+        <a class="logo" href="https://www.betterdecisionsfaster.de/" aria-label="Better Decisions Faster"><img src="assets/bdf-logo.png" alt="BDF – Better Decisions Faster"/></a>
+        <span class="pill"><i></i>Tagesaktuell</span>
+      </div>
+      <div class="intro">
+        <div class="eyebrow">Management Intelligence</div>
+        <h1>Sales Intelligence – Ihr Vertrieb in zwei Minuten</h1>
+        <p>Ihre Vertriebszahlen: tagesaktuell und jederzeit abrufbar.</p>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <div class="player">
+      <video id="v" controls playsinline preload="metadata" poster="poster.jpg">
+        <source src="sales-intelligence.mp4" type="video/mp4"/>
+        Ihr Browser kann dieses Video nicht abspielen.
+      </video>
+    </div>
+    <p class="hint">Das Video hat keinen Ton. Alle Zahlen sind synthetische Beispieldaten. <a href="#ask">Direkt zur Frage</a></p>
+
+    <section id="ask" aria-live="polite">
+      <div id="question">
+        <div class="kicker">Kurz innehalten</div>
+        <h2>Welcher Aspekt hat für Ihre Situation die höchste Relevanz?</h2>
+        <p class="sub">Wählen Sie einen – daran können wir im Gespräch direkt ansetzen.</p>
+        <div class="opts" id="opts">
+          <button class="opt" data-k="Tagesaktuelle Zahlen statt Excel-Aufwand"><b>1</b>Tagesaktuelle Zahlen statt Excel-Aufwand</button>
+          <button class="opt" data-k="Kundenverluste früher erkennen"><b>2</b>Kundenverluste früher erkennen</button>
+          <button class="opt" data-k="Verkaufschancen gezielt nutzen"><b>3</b>Verkaufschancen gezielt nutzen</button>
+          <button class="opt" data-k="Mehr Überblick für die Geschäftsführung"><b>4</b>Mehr Überblick für die Geschäftsführung</button>
+        </div>
+      </div>
+
+      <div id="thanks" tabindex="-1">
+        <svg class="check" viewBox="0 0 84 84" aria-hidden="true"><circle cx="42" cy="42" r="38"/><path d="M26 43l11 11 21-24"/></svg>
+        <h3>Danke für Ihre Einschätzung.</h3>
+        <span class="chosen" id="chosen"></span>
+        <p>Ein Klick noch: Schicken Sie uns Ihre Auswahl per E-Mail, dann gehen wir im Gespräch genau darauf ein.</p>
+        <div class="actions">
+          <a class="btn primary" id="mailAnswer" href="#">Auswahl per E-Mail senden</a>
+          <a class="btn ghost" id="mailTermin" href="#">30-Minuten-Dashboard-Schulterblick vereinbaren</a>
+        </div>
+        <p class="privacy">Auf dieser Seite wird nichts gespeichert oder übertragen. Erst Ihre E-Mail teilt uns Ihre Auswahl mit.</p>
+      </div>
+      <div class="confetti" id="confetti" aria-hidden="true"></div>
+    </section>
+  </main>
+
+  <footer>
+    <a href="https://www.betterdecisionsfaster.de/">betterdecisionsfaster.de</a> · <a href="https://www.betterdecisionsfaster.de/impressum.html">Impressum</a> · <a href="https://www.betterdecisionsfaster.de/Datenschutz.html">Datenschutz</a>
+  </footer>
+
+  <script>
+    (function(){
+      var MAIL='kontakt@betterdecisionsfaster.de';
+      var v=document.getElementById('v'), ask=document.getElementById('ask'), opts=document.getElementById('opts');
+      var reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      function mailto(sub,body){return 'mailto:'+MAIL+'?subject='+encodeURIComponent(sub)+'&body='+encodeURIComponent(body)}
+      // am Videoende zur Frage führen
+      v.addEventListener('ended',function(){
+        ask.scrollIntoView({behavior:reduce?'auto':'smooth',block:'center'});
+        ask.classList.remove('glow'); void ask.offsetWidth; ask.classList.add('glow');
+      });
+      // Auswahl
+      opts.addEventListener('click',function(e){
+        var b=e.target.closest('.opt'); if(!b) return;
+        var k=b.getAttribute('data-k'), n=b.querySelector('b').textContent;
+        b.classList.add('sel'); opts.classList.add('done');
+        document.getElementById('chosen').textContent=n+' · '+k;
+        document.getElementById('mailAnswer').href=mailto('Sales Intelligence – mein Schwerpunkt: '+k,
+          'Guten Tag,\n\nfür unsere Situation hat folgender Aspekt die höchste Relevanz:\n'+n+' – '+k+'\n\nBitte melden Sie sich bei mir.\n\nViele Grüße');
+        document.getElementById('mailTermin').href=mailto('Termin: 30-Minuten-Dashboard-Schulterblick',
+          'Guten Tag,\n\nich möchte gern einen 30-Minuten-Dashboard-Schulterblick vereinbaren.\nMein Schwerpunkt: '+k+'\n\nViele Grüße');
+        setTimeout(function(){
+          document.getElementById('question').style.display='none';
+          var t=document.getElementById('thanks'); t.classList.add('show'); t.focus({preventScroll:true});
+          if(!reduce) burst();
+        },450);
+      });
+      function burst(){
+        var c=document.getElementById('confetti'), cols=['#0969da','#218bff','#60d096','#ddf4ff','#14336a'];
+        for(var i=0;i<46;i++){
+          var s=document.createElement('span');
+          s.style.left=(Math.random()*100)+'%'; s.style.background=cols[i%cols.length];
+          s.style.animationDelay=(Math.random()*.5)+'s'; s.style.animationDuration=(1.5+Math.random()*1.2)+'s';
+          c.appendChild(s);
+        }
+        setTimeout(function(){c.innerHTML=''},3600);
+      }
+    })();
+  </script>
+</body>
+</html>
