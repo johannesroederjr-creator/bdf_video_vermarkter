@@ -116,7 +116,7 @@ def badge(img, t):
     text(img, cx - wd / 2 + 52, cy + 1, s, 24, 'Bold', WHITE, a, 'lm', spacing=4)
 
 
-TR = 1.4   # camera transition (s)
+TR = 2.0   # Kamerafahrt (s); langsamer = ruhiger
 
 def bubble(img, lines, rs, side, a, t):
     """accent-coloured hint bubble placed next to screen-rect rs with a pointer."""

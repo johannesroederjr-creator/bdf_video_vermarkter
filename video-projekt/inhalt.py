@@ -7,6 +7,8 @@ Aufbau eines Abschnitts (SPEC_B / SPEC_C / SPEC_D):
           zoom=Bereich, auf den die Kamera fährt   rects=Rahmen   say=Text der Blase (Liste = Zeilen)
           side=Lage der Blase (below/above/left/right/bottom)   callout=kleines Etikett oben
           dim=False -> Umgebung wird nicht abgedunkelt   col=Rahmenfarbe
+TEMPO (ganz unten): TEMPO_FAKTOR=2.0 heißt, die Aufnahme läuft halb so schnell; alle Zeiten (out, t0, t1)
+werden unten automatisch umgerechnet. Die Zeiten in den Abschnitten unten sind die ursprünglichen "schnellen" Werte.
 Rechtecke werden mit R(x0, y0, x1, y1) in Pixeln des Original-Bildes (1920x1080) angegeben.
 """
 from engine import R, union, GREEN, RED, ACC
@@ -15,7 +17,7 @@ DAUER = dict(einstieg=7.4, abfrage=25.0, abspann=8.4)   # Sekunden; Datenabschni
 
 T = dict(
     siegel='TAGESAKTUELL', hinweis='Synthetische Beispieldaten',
-    eyebrow='Managment-Cockpit', titel='SALES INTELLIGENCE',
+    eyebrow='Management-Cockpit', titel='SALES INTELLIGENCE',
     claim='Ihr Vertrieb kann mehr. Ihre Daten zeigen, wo.',
     frage1='Sie kennen Ihre Umsätze. Aber wissen Sie auch,', frage2='wo Ihr Vertrieb als Nächstes ansetzen sollte?',
     cta1='Entdecken Sie,', cta2='was in Ihren Vertriebsdaten steckt.', cta3='Tagesaktuell. Jederzeit abrufbar.',
@@ -66,3 +68,30 @@ SPEC_D = dict(label='03 · VERKAUFSCHANCEN', title='Wo liegen die nächsten Verk
     dict(t0=36.6, t1=45.4, rects=[P4['kunde']], dim=False, say=['Einen Kunden auswählen –', 'die Chancen bei ihm sofort sehen.'], side='right')])
 
 
+
+
+# ------------------------------------------------------------ TEMPO
+# Alle Zeiten oben sind im ursprünglichen Tempo geschrieben. Hier werden sie gestreckt:
+TEMPO_FAKTOR = 2.0        # Aufnahme-Clips: 2.0 = halb so schnell wie zuvor
+STANDBILD_FAKTOR = 1.5    # Standbild-Abschnitte (nur Lesezeit für Texte)
+MIND_START = 5.0          # Sekunden, die die Übersicht mit Abschnittsnummer und Titel mindestens stehen bleibt, bevor die Kamera zoomt
+
+def _tempo(clips, spec):
+    segs = []; a_alt = 0.0; a_neu = 0.0
+    for c in clips:
+        f = STANDBILD_FAKTOR if c.get('freeze') else TEMPO_FAKTOR
+        segs.append((a_alt, a_alt + c['out'], a_neu, f)); a_alt += c['out']; a_neu += c['out'] * f
+    def m(t):
+        for a0, a1, n0, f in segs:
+            if t <= a1: return n0 + (t - a0) * f
+        a0, a1, n0, f = segs[-1]; return n0 + (t - a0) * f
+    for c, sg in zip(clips, segs): c['out'] = round(c['out'] * sg[3], 2)
+    for b in spec['beats']:
+        b['t0'] = round(m(b['t0']), 2); b['t1'] = round(m(b['t1']), 2)
+    zooms = [b['t0'] for b in spec['beats'] if b.get('zoom')]
+    delta = round(MIND_START - min(zooms), 2) if zooms else 0
+    if delta > 0:   # Übersicht mit Titel zuerst länger als Standbild zeigen
+        for b in spec['beats']: b['t0'] = round(b['t0'] + delta, 2); b['t1'] = round(b['t1'] + delta, 2)
+        s0 = clips[0]['src'][0]; clips.insert(0, dict(src=(s0, s0), out=delta, freeze=True))
+
+for _cl, _sp in ((CL_B, SPEC_B), (CL_C, SPEC_C), (CL_D, SPEC_D)): _tempo(_cl, _sp)
