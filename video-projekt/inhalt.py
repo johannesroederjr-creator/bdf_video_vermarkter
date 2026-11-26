@@ -15,7 +15,7 @@ DAUER = dict(einstieg=7.4, abfrage=25.0, abspann=8.4)   # Sekunden; Datenabschni
 
 T = dict(
     siegel='TAGESAKTUELL', hinweis='Synthetische Beispieldaten',
-    eyebrow='MANAGEMENT INTELLIGENCE', titel='SALES INTELLIGENCE',
+    eyebrow='Managment-Cockpit', titel='SALES INTELLIGENCE',
     claim='Ihr Vertrieb kann mehr. Ihre Daten zeigen, wo.',
     frage1='Sie kennen Ihre Umsätze. Aber wissen Sie auch,', frage2='wo Ihr Vertrieb als Nächstes ansetzen sollte?',
     cta1='Entdecken Sie,', cta2='was in Ihren Vertriebsdaten steckt.', cta3='Tagesaktuell. Jederzeit abrufbar.',
